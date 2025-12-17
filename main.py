@@ -142,7 +142,7 @@ async def predict_image(file: UploadFile = File(...)):
         confidence = float(np.max(prediction[0]))
         
         # Mapear clase a nombre
-        cclass_names = [
+        class_names = [
             'Camiseta/Top',
             'Pantalón',
             'Suéter',

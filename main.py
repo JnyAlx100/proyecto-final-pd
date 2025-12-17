@@ -40,14 +40,14 @@ def load_model():
 def preprocess_image(image: Image.Image) -> np.ndarray:
     """
     Preprocesar imagen siguiendo los mismos pasos del notebook:
-    1. Redimensionar a 300x300
+    1. Redimensionar a 28x28
     2. Convertir a escala de grises (canal 0)
     3. Normalizar [0,1]
     4. Reshape para el modelo
     """
     try:
-        # Redimensionar a 300x300
-        image = image.resize((300, 300))
+        # Redimensionar a 28x28
+        image = image.resize((28, 28))
         
         # Convertir a RGB si es necesario, luego a array
         if image.mode != 'RGB':
@@ -60,13 +60,13 @@ def preprocess_image(image: Image.Image) -> np.ndarray:
         if len(img_array.shape) == 3:
             img_array = img_array[:, :, 0]
         
-        # Reshape para que sea (300, 300, 1)
-        img_array = img_array.reshape((300, 300, 1))
+        # Reshape para que sea (28, 28, 1)
+        img_array = img_array.reshape((28, 28, 1))
         
         # Convertir a float32 y normalizar
         img_array = img_array.astype('float32') / 255.0
         
-        # Agregar dimensión del batch: (1, 300, 300, 1)
+        # Agregar dimensión del batch: (1, 28, 28, 1)
         img_array = np.expand_dims(img_array, axis=0)
         
         return img_array

@@ -13,8 +13,8 @@ tf.config.experimental.set_memory_growth(
 ) if tf.config.experimental.list_physical_devices('GPU') else None
 
 app = FastAPI(
-    title="Horse vs Human Classifier API",
-    description="API para clasificar imágenes entre caballos y humanos usando CNN",
+    title="Clothing Classifier API",
+    description="API para clasificar imágenes de prendas de vestir",
     version="1.0.0"
 )
 
@@ -24,7 +24,7 @@ model = None
 def load_model():
     """Cargar el modelo entrenado"""
     global model
-    model_path = "horse_human_classifier.h5"
+    model_path = "pd_proyecto_final_model.h5"
     
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Modelo no encontrado en {model_path}")
@@ -87,7 +87,7 @@ async def startup_event():
 async def root():
     """Endpoint raíz con información básica"""
     return {
-        "message": "Horse vs Human Classifier API",
+        "message": "Clothing Classifier API",
         "status": "active",
         "model_loaded": model is not None,
         "endpoints": {
@@ -142,17 +142,26 @@ async def predict_image(file: UploadFile = File(...)):
         confidence = float(np.max(prediction[0]))
         
         # Mapear clase a nombre
-        class_names = {0: "horse", 1: "human"}
+        cclass_names = [
+            'Camiseta/Top',
+            'Pantalón',
+            'Suéter',
+            'Vestido',
+            'Abrigo',
+            'Sandalia',
+            'Camisa',
+            'Tenis',
+            'Bolsa',
+            'Bota de tobillo'
+        ]
+
         class_name = class_names[predicted_class]
         
         return {
             "class": predicted_class,
             "class_name": class_name,
             "confidence": confidence,
-            "probabilities": {
-                "horse": probabilities[0],
-                "human": probabilities[1]
-            },
+            "prediction": class_name,
             "image_info": {
                 "filename": file.filename,
                 "content_type": file.content_type,
